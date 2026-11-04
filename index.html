@@ -319,11 +319,32 @@
     // Enlace a la tienda con UTM: GA4 atribuye la sesión a esta landing.
     function link(path, content) { return SITE + path + '?' + UTM + '&utm_content=' + content; }
     function wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
-    function track(fbName, gaName, extra, standard) {
+    /* Medición de clics (2026-11-04). Un evento por botón, con nombres distintos en
+       Meta y en GA4 para que el puente GA4→píxel no los cuente dos veces con el mismo nombre.
+         Meta:  ClickCatalogo · ClickWhatsApp (+ Contact estándar, para optimizar anuncios) · ClickVerificar · ClickEnlaceTienda
+         GA4:   click_catalogo · click_whatsapp · click_verificar · click_enlace_tienda
+       GA4 va por beacon: el envío sobrevive al cambio de página. */
+    function track(fbName, gaName, extra, fbStandard) {
+      extra = extra || {};
       try {
-        if (window.fbq) fbq(standard ? 'track' : 'trackCustom', fbName, extra || {});
-        if (window.gtag) gtag('event', gaName, extra || {});
+        if (window.fbq) {
+          fbq('trackCustom', fbName, extra);
+          if (fbStandard) fbq('track', fbStandard, extra);
+        }
       } catch (e) {}
+      try {
+        if (window.gtag) gtag('event', gaName, Object.assign({ transport_type: 'beacon' }, extra));
+      } catch (e) {}
+    }
+    /* Enlaces que salen a la tienda en la misma pestaña: se espera un instante para que
+       el píxel alcance a enviarse antes de cambiar de página. Ctrl/cmd-clic se respeta. */
+    function trackAndGo(a, e, fbName, gaName, extra) {
+      track(fbName, gaName, extra);
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
+      e.preventDefault();
+      var href = a.href, gone = false;
+      function go() { if (!gone) { gone = true; location.href = href; } }
+      setTimeout(go, 300);
     }
 
     var lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
@@ -354,14 +375,21 @@
       render();
     });
 
-    document.getElementById('toStore').addEventListener('click', function () {
-      track('LinksToStore', 'links_to_store', { where: 'hero' });
-    });
-    document.getElementById('proofLink').addEventListener('click', function () {
-      track('LinksVerify', 'links_verify', {});
+    document.getElementById('toStore').addEventListener('click', function (e) {
+      trackAndGo(this, e, 'ClickCatalogo', 'click_catalogo', { lang: lang });
     });
     document.getElementById('toWa').addEventListener('click', function () {
-      track('Contact', 'links_to_whatsapp', { content_name: 'links-page' }, true);
+      // Se abre en otra pestaña/app: no hace falta esperar.
+      track('ClickWhatsApp', 'click_whatsapp', { lang: lang, content_name: 'landing-panama' }, 'Contact');
+    });
+    document.getElementById('proofLink').addEventListener('click', function () {
+      track('ClickVerificar', 'click_verificar', { lang: lang });
+    });
+    [['.brand', 'logo'], ['#fHome', 'footer'], ['#fVerify', 'footer_verify'], ['#fPrivacy', 'footer_privacy']].forEach(function (x) {
+      var el = document.querySelector(x[0]);
+      if (el) el.addEventListener('click', function (e) {
+        trackAndGo(this, e, 'ClickEnlaceTienda', 'click_enlace_tienda', { where: x[1], lang: lang });
+      });
     });
 
 
