@@ -105,6 +105,16 @@
       object-fit: cover; object-position: 50% 8%;
       z-index: -1;
     }
+    /* Video de fondo continuo (pedido del dueño 2026-11-04): sin toques, sin controles
+       ni botón de play de iOS. Se muestra solo cuando ya está corriendo; si el teléfono
+       bloquea el autoplay (p. ej. modo de bajo consumo) queda la foto fija de debajo,
+       nunca un botón de play. */
+    .hero video { pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+    .hero video.is-playing { opacity: 1; }
+    .hero video::-webkit-media-controls,
+    .hero video::-webkit-media-controls-panel,
+    .hero video::-webkit-media-controls-overlay-play-button,
+    .hero video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
     .hero::after {
       content: ""; position: absolute; inset: 0;
       background: linear-gradient(to bottom, rgba(244,244,245,0) 40%, rgba(244,244,245,.8) 80%, var(--bg) 100%);
@@ -200,9 +210,6 @@
       .d2 { animation-delay: .08s } .d3 { animation-delay: .16s }
       @keyframes in { from { opacity: 0; transform: translateY(10px); } }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .hero video { display: none; }
-    }
     @media (min-width: 720px) {
       .hero { height: 40vh; }
       main { width: min(540px, 100%); }
@@ -214,7 +221,7 @@
 <body>
   <header class="hero">
     <img src="assets/hero-molecule-tall.webp" alt="" width="900" height="1200">
-    <video autoplay muted loop playsinline preload="metadata" poster="assets/hero-molecule-tall.webp" aria-hidden="true">
+    <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" poster="assets/hero-molecule-tall.webp" aria-hidden="true">
       <source src="assets/hero-molecule-tall.webm" type="video/webm">
       <source src="assets/hero-molecule-tall.mp4" type="video/mp4">
     </video>
@@ -360,6 +367,28 @@
 
     render();
 
+    /* Video siempre en marcha: si el navegador lo pausa (cambio de pestaña, ahorro de
+       batería, toque), se reanuda; si el autoplay está bloqueado, lo intenta con el primer
+       toque o scroll. Mientras no corre, se ve la foto fija. */
+    (function keepVideo() {
+      var v = document.getElementById('heroVideo');
+      if (!v) return;
+      v.muted = true; v.defaultMuted = true; v.setAttribute('muted', '');
+      function play() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      function shown() { v.classList.add('is-playing'); }
+      v.addEventListener('playing', shown);
+      v.addEventListener('timeupdate', function () { if (v.currentTime > 0) shown(); });
+      if (!v.paused) shown();
+      v.addEventListener('pause', function () { if (!document.hidden) setTimeout(play, 50); });
+      v.addEventListener('ended', function () { v.currentTime = 0; play(); });
+      v.addEventListener('canplay', play);
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) play(); });
+      window.addEventListener('pageshow', play);
+      ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
+        window.addEventListener(ev, play, { passive: true, once: true });
+      });
+      play();
+    })();
   })();
   </script>
 </body>
