@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net; media-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://www.googletagmanager.com https://capi-automation.s3.us-east-2.amazonaws.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://bded8a3c6ae-1-1053047382554.us-central1.run.app https://8b-ffbbe167ddcc42afb5f860276d91024e.ecs.us-west-2.on.aws; frame-src https://www.facebook.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+  <!--
+    Landing de Instagram (bio y anuncios), SOLO Panamá. 2026-11-04.
+    Vive en OTRO dominio del dueño, no en codexresearchlab.com: es una carpeta
+    autónoma (index.html + assets/). Todos los enlaces a la tienda son absolutos
+    y llevan UTM (utm_campaign=landing-panama) para que GA4 atribuya la visita.
+    Al ser otro dominio, el localStorage de la tienda (país, gate) NO se comparte:
+    la tienda detecta Panamá por la zona horaria.
+    Datos escritos a mano (no hay data.js aquí). Si cambian, actualizar:
+      WA         ← WHATSAPP de data.js
+      tarjetas de entrega ← COUNTRIES.PA de data.js
+    Su único trabajo es llevar al catálogo o a WhatsApp (nada de viales aquí).
+    Orden pensado para el visor de Instagram (~375×630 útiles): titular y los
+    dos botones caben sin hacer scroll; lo demás es para quien duda.
+    Tema claro fijo, como el resto de la tienda.
+  -->
+  <meta name="robots" content="noindex, follow">
+  <meta name="color-scheme" content="light">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-44S7TCGRFM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-44S7TCGRFM');
+  </script>
+  <!-- End Google tag -->
+  <title>Codex Research · Panamá</title>
+  <meta name="description" content="Péptidos para investigación en Ciudad de Panamá, entrega en 1-2 horas. Catálogo y WhatsApp.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Codex Research · Panamá">
+  <meta property="og:description" content="Pídelo hoy, llega en 1-2 horas en Ciudad de Panamá.">
+  <meta property="og:image" content="https://codexresearchlab.com/assets/og-default.png">
+  <meta name="theme-color" content="#f4f4f5">
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="preload" as="image" type="image/webp" href="assets/hero-molecule-tall.webp" fetchpriority="high">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fragment+Mono&display=swap" rel="stylesheet">
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1589772189600279');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1589772189600279&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <style>
+    :root {
+      --ink: #1d2026;
+      --ink-2: #23262d;
+      --muted: #5f646c;          /* 5.6:1 sobre --bg */
+      --line: #e1e2e6;
+      --bg: #f4f4f5;
+      --card: #ffffff;
+      --wa: #0e8341;             /* verde WhatsApp oscurecido: blanco encima pasa AA */
+      --wa-hover: #0b6f37;
+      --on-ink: #eceef2;
+      --on-ink-muted: #a2a7b0;
+      --on-ink-line: rgba(255, 255, 255, .1);
+      --r-lg: 20px;              /* paneles */
+      --r-md: 14px;              /* botones, tarjetas, campos */
+      --sans: 'DM Sans', -apple-system, system-ui, sans-serif;
+      --mono: 'Fragment Mono', 'SF Mono', ui-monospace, monospace;
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink-2);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100dvh;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+    /* ---------- Molécula ---------- */
+    .hero {
+      position: relative;
+      height: clamp(210px, 36svh, 480px);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero video, .hero img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% 8%;
+      z-index: -1;
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(244,244,245,0) 40%, rgba(244,244,245,.8) 80%, var(--bg) 100%);
+    }
+    .top {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: max(16px, env(safe-area-inset-top)) 20px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); }
+    .brand svg { width: 26px; height: auto; }
+    .brand span { font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
+    .lang {
+      font-family: var(--mono); font-size: 12px; min-width: 44px; min-height: 36px;
+      padding: 0 12px; border-radius: 999px; border: 0; cursor: pointer;
+      background: rgba(255,255,255,.6);
+      -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 0 0 1px rgba(20,22,28,.08);
+    }
+
+    /* ---------- Columna ---------- */
+    main {
+      position: relative; z-index: 3;
+      width: min(480px, 100%);
+      margin: calc(-1 * clamp(64px, 9svh, 110px)) auto 0;
+      padding: 0 20px max(28px, env(safe-area-inset-bottom));
+    }
+    h1 {
+      font-weight: 600;
+      font-size: clamp(36px, 10.6vw, 52px);
+      line-height: 1;
+      letter-spacing: -.035em;
+      color: var(--ink);
+    }
+    h1 span { display: block; }
+    .lede { margin-top: 12px; font-size: 16px; color: var(--muted); max-width: 32ch; text-wrap: pretty; }
+
+    /* Botones: un primario por intención */
+    .actions { display: grid; gap: 10px; margin-top: 22px; }
+    .btn {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      min-height: 58px; padding: 0 20px; border-radius: var(--r-md);
+      text-decoration: none; font-size: 16.5px; font-weight: 500; letter-spacing: -.01em;
+      white-space: nowrap;
+      transition: transform .2s var(--ease), background-color .2s var(--ease);
+    }
+    .btn:active { transform: scale(.98); }
+    .btn svg { flex: none; }
+    .btn .lbl { display: inline-flex; align-items: center; gap: 11px; }
+    .btn-primary { background: var(--ink); color: #fff; }
+    .btn-primary:hover { background: #0d0f12; }
+    .btn-wa { background: var(--wa); color: #fff; }
+    .btn-wa:hover { background: var(--wa-hover); }
+    .btn .arrow { transition: transform .3s var(--ease); }
+    .btn:hover .arrow { transform: translateX(3px); }
+    .btn-wa:hover .arrow { transform: translate(2px, -2px); }
+
+ 
+    /* Línea de prueba bajo los botones: texto, sin pastilla ni icono */
+    .proof { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+    .proof b { color: var(--ink); font-weight: 600; white-space: nowrap; }
+    .proof a { color: var(--ink); text-underline-offset: 3px; white-space: nowrap; }
+
+    /* ---------- Entrega ---------- */
+    /* Tarjetas de entrega: 2×2, mismo radio que los botones. Sin iconos (regla de la tienda). */
+    .facts {
+      margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .facts div {
+      display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px;
+      min-height: 0; padding: 13px 14px 14px;
+      background: var(--card); border-radius: var(--r-md);
+      box-shadow: 0 0 0 1px rgba(20,22,28,.06), 0 1px 2px rgba(41,46,76,.04);
+    }
+    .facts dt { font-size: 12.5px; color: var(--muted); line-height: 1.3; }
+    .facts dd { font-size: 19px; white-space: nowrap; color: var(--ink); font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
+
+ 
+    .origin { margin-top: 18px; display: flex; align-items: center; justify-content: center; gap: 9px; text-align: center; font-size: 13.5px; font-weight: 500; color: var(--ink-2); letter-spacing: -.005em; }
+
+    .origin .flag { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgba(20,22,28,.12); }
+
+    footer {
+      margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line);
+      font-size: 12.5px; color: var(--muted); line-height: 1.6;
+    }
+    footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; }
+    footer nav a { text-decoration: none; color: var(--ink-2); }
+
+    /* Entrada: jerarquía (titular, luego acciones). Solo al cargar. */
+    @media (prefers-reduced-motion: no-preference) {
+      .in { animation: in .7s var(--ease) both; }
+      .d2 { animation-delay: .08s } .d3 { animation-delay: .16s }
+      @keyframes in { from { opacity: 0; transform: translateY(10px); } }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero video { display: none; }
+    }
+    @media (min-width: 720px) {
+      .hero { height: 40vh; }
+      main { width: min(540px, 100%); }
+      h1 { font-size: 46px; }
+      .hero video, .hero img { object-position: 50% 30%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <img src="assets/hero-molecule-tall.webp" alt="" width="900" height="1200">
+    <video autoplay muted loop playsinline preload="metadata" poster="assets/hero-molecule-tall.webp" aria-hidden="true">
+      <source src="assets/hero-molecule-tall.webm" type="video/webm">
+      <source src="assets/hero-molecule-tall.mp4" type="video/mp4">
+    </video>
+    <div class="top">
+      <a class="brand" href="https://codexresearchlab.com/es/" aria-label="Codex Research">
+        <svg viewBox="0 0 641.02 558.18" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M214.96 187.97 L162.94 97.99 L215.43 8.00 L423.52 8.00 L528.50 188.44 L476.46 279.41 L424.46 370.29 L371.96 280.30 L423.52 188.44 L372.43 98.46 L267.45 98.46 Z M579.59 279.76 L633.02 369.51 L528.27 549.71 L319.47 549.95 L215.19 369.74 L319.94 369.51 L371.73 460.43 L476.24 460.66 L528.97 369.98 L476.46 279.41 Z M320.14 189.07 L268.35 278.47 L161.72 278.23 L109.94 369.86 L161.61 460.31 L266.59 460.78 L214.33 549.83 L111.58 550.18 L8.00 369.51 L111.69 189.07 Z"/></svg>
+        <span>Codex Research</span>
+      </a>
+      <button class="lang" id="lang" type="button" aria-label="Read in English">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="in"><span data-t="h1a">Pídelo hoy.</span> <span data-t="h1b">Llega en 1-2 horas.</span></h1>
+    <p class="lede in d2" data-t="lede">Péptidos para investigación en Ciudad de Panamá, cada vial con su lote comprobable.</p>
+
+    <div class="actions in d3">
+      <a class="btn btn-primary" id="toStore" href="https://codexresearchlab.com/es/catalog/">
+        <span data-t="store">Ver el catálogo</span>
+        <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn-wa" id="toWa" href="https://wa.me/50767749282" target="_blank" rel="noopener">
+        <span class="lbl">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          <span data-t="wa">Escribir por WhatsApp</span>
+        </span>
+        <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+      </a>
+    </div>
+
+    <!-- Prueba junto a los botones (CRO punto 6). Misma afirmación que la FAQ de
+         la tienda («Every batch comes with a COA from an independent lab»).
+         Sin cifra ni compuesto: el único resultado publicado es de un solo producto. -->
+    <p class="proof in d3">
+      <span data-t="proof1">Cada lote se analiza en un laboratorio independiente.</span>
+      <a id="proofLink" href="https://codexresearchlab.com/es/verify/" target="_blank" rel="noopener" data-t="proofLink">Verificar un lote</a>
+    </p>
+
+    <dl class="facts">
+      <div><dt data-t="fCity">Ciudad de Panamá</dt><dd data-t="vCity">1-2 horas</dd></div>
+      <div><dt data-t="fInt">Interior, en días hábiles</dt><dd data-t="vInt">Día siguiente</dd></div>
+      <div><dt data-t="fShip">Envío, gratis desde $100</dt><dd data-t="vShip">$4</dd></div>
+      <div><dt data-t="fPay">Formas de pago</dt><dd data-t="vPay">Yappy o cripto</dd></div>
+    </dl>
+
+    <!-- Origen afirmado por el dueño el 2026-11-04: el producto se liofiliza en EE. UU.
+         No ampliarlo a «fabricado» o «producto americano» sin que lo confirme. -->
+    <p class="origin"><svg class="flag" width="22" height="15" viewBox="0 0 22 15" aria-hidden="true"><rect width="22" height="15" fill="#fff"/><rect y="0.000" width="22" height="1.154" fill="#b22234"/><rect y="2.308" width="22" height="1.154" fill="#b22234"/><rect y="4.615" width="22" height="1.154" fill="#b22234"/><rect y="6.923" width="22" height="1.154" fill="#b22234"/><rect y="9.231" width="22" height="1.154" fill="#b22234"/><rect y="11.538" width="22" height="1.154" fill="#b22234"/><rect y="13.846" width="22" height="1.154" fill="#b22234"/><rect width="9.2" height="8.08" fill="#3c3b6e"/><circle cx="1.10" cy="1.00" r=".38" fill="#fff"/><circle cx="2.90" cy="1.00" r=".38" fill="#fff"/><circle cx="4.70" cy="1.00" r=".38" fill="#fff"/><circle cx="6.50" cy="1.00" r=".38" fill="#fff"/><circle cx="8.30" cy="1.00" r=".38" fill="#fff"/><circle cx="2.00" cy="2.33" r=".38" fill="#fff"/><circle cx="3.80" cy="2.33" r=".38" fill="#fff"/><circle cx="5.60" cy="2.33" r=".38" fill="#fff"/><circle cx="7.40" cy="2.33" r=".38" fill="#fff"/><circle cx="1.10" cy="3.66" r=".38" fill="#fff"/><circle cx="2.90" cy="3.66" r=".38" fill="#fff"/><circle cx="4.70" cy="3.66" r=".38" fill="#fff"/><circle cx="6.50" cy="3.66" r=".38" fill="#fff"/><circle cx="8.30" cy="3.66" r=".38" fill="#fff"/><circle cx="2.00" cy="4.99" r=".38" fill="#fff"/><circle cx="3.80" cy="4.99" r=".38" fill="#fff"/><circle cx="5.60" cy="4.99" r=".38" fill="#fff"/><circle cx="7.40" cy="4.99" r=".38" fill="#fff"/><circle cx="1.10" cy="6.32" r=".38" fill="#fff"/><circle cx="2.90" cy="6.32" r=".38" fill="#fff"/><circle cx="4.70" cy="6.32" r=".38" fill="#fff"/><circle cx="6.50" cy="6.32" r=".38" fill="#fff"/><circle cx="8.30" cy="6.32" r=".38" fill="#fff"/><circle cx="2.00" cy="7.65" r=".38" fill="#fff"/><circle cx="3.80" cy="7.65" r=".38" fill="#fff"/><circle cx="5.60" cy="7.65" r=".38" fill="#fff"/><circle cx="7.40" cy="7.65" r=".38" fill="#fff"/></svg><span data-t="origin">Liofilizado en Estados Unidos</span></p>
+
+    <footer>
+      <p data-t="ruo">Solo para investigación de laboratorio. No apto para consumo humano ni animal. Venta a mayores de 21 años.</p>
+      <nav>
+        <a id="fHome" href="https://codexresearchlab.com/es/">codexresearchlab.com</a>
+        <a id="fVerify" href="https://codexresearchlab.com/es/verify/" data-t="verify">Verificador de lotes</a>
+        <a id="fPrivacy" href="https://codexresearchlab.com/privacy/" data-t="privacy">Privacidad</a>
+      </nav>
+    </footer>
+  </main>
+
+  <script>
+  (function () {
+    var SITE = 'https://codexresearchlab.com';
+    var UTM = 'utm_source=instagram&utm_medium=social&utm_campaign=landing-panama';
+    var WA = '50767749282'; // = WHATSAPP de data.js
+
+    var T = {
+      es: {
+        h1a: 'Pídelo hoy.', h1b: 'Llega en 1-2 horas.',
+        lede: 'Péptidos para investigación en Ciudad de Panamá, cada vial con su lote comprobable.',
+        store: 'Ver el catálogo', wa: 'Escribir por WhatsApp',
+        fCity: 'Ciudad de Panamá', vCity: '1-2 horas', fInt: 'Interior, en días hábiles', vInt: 'Día siguiente',
+        fShip: 'Envío, gratis desde $100', vShip: '$4', fPay: 'Formas de pago', vPay: 'Yappy o cripto',
+        ruo: 'Solo para investigación de laboratorio. No apto para consumo humano ni animal. Venta a mayores de 21 años.',
+        verify: 'Verificador de lotes', privacy: 'Privacidad',
+        waText: 'Hola Codex, vengo de Instagram.',
+        origin: 'Liofilizado en Estados Unidos',
+        proof1: 'Cada lote se analiza en un laboratorio independiente.', proofLink: 'Verificar un lote',
+        base: '/es', lang: 'EN', langLabel: 'Read in English',
+      },
+      en: {
+        h1a: 'Order today.', h1b: 'At your door in 1-2 hours.',
+        lede: 'Research peptides in Panama City, every vial with a batch you can check.',
+        store: 'Browse the catalog', wa: 'Message us on WhatsApp',
+        fCity: 'Panama City', vCity: '1-2 hours', fInt: 'Interior, business days', vInt: 'Next day',
+        fShip: 'Shipping, free over $100', vShip: '$4', fPay: 'Payment', vPay: 'Yappy or crypto',
+        ruo: 'For laboratory research only. Not for human or animal consumption. Sold to adults 21+.',
+        verify: 'Batch verifier', privacy: 'Privacy',
+        waText: 'Hi Codex, I found you on Instagram.',
+        origin: 'Lyophilized in the United States',
+        proof1: 'Every batch is tested by an independent lab.', proofLink: 'Verify a batch',
+        base: '', lang: 'ES', langLabel: 'Leer en español',
+      }
+    };
+
+    // Enlace a la tienda con UTM: GA4 atribuye la sesión a esta landing.
+    function link(path, content) { return SITE + path + '?' + UTM + '&utm_content=' + content; }
+    function wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+    function track(fbName, gaName, extra, standard) {
+      try {
+        if (window.fbq) fbq(standard ? 'track' : 'trackCustom', fbName, extra || {});
+        if (window.gtag) gtag('event', gaName, extra || {});
+      } catch (e) {}
+    }
+
+    var lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
+
+    function render() {
+      var L = T[lang];
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-t]').forEach(function (el) {
+        var v = L[el.dataset.t];
+        if (typeof v === 'string') el.textContent = v;
+      });
+      var langBtn = document.getElementById('lang');
+      langBtn.textContent = L.lang; langBtn.setAttribute('aria-label', L.langLabel);
+      document.getElementById('toStore').href = link(L.base + '/catalog/', 'catalog');
+      document.getElementById('toWa').href = wa(L.waText);
+      document.querySelector('.brand').href = link(L.base + '/', 'logo');
+      document.getElementById('fHome').href = link(L.base + '/', 'footer');
+      document.getElementById('fVerify').href = link(L.base + '/verify/', 'footer');
+      document.getElementById('proofLink').href = link(L.base + '/verify/', 'proof');
+      document.getElementById('fPrivacy').href = link('/privacy/', 'footer');
+    }
+
+    document.getElementById('lang').addEventListener('click', function () {
+      lang = lang === 'es' ? 'en' : 'es';
+      var u = new URL(location.href);
+      if (lang === 'en') u.searchParams.set('lang', 'en'); else u.searchParams.delete('lang');
+      history.replaceState(null, '', u);
+      render();
+    });
+
+    document.getElementById('toStore').addEventListener('click', function () {
+      track('LinksToStore', 'links_to_store', { where: 'hero' });
+    });
+    document.getElementById('proofLink').addEventListener('click', function () {
+      track('LinksVerify', 'links_verify', {});
+    });
+    document.getElementById('toWa').addEventListener('click', function () {
+      track('Contact', 'links_to_whatsapp', { content_name: 'links-page' }, true);
+    });
+
+
+    render();
+
+  })();
+  </script>
+</body>
+</html>
