@@ -317,7 +317,10 @@
     };
 
     // Enlace a la tienda con UTM: GA4 atribuye la sesión a esta landing.
-    function link(path, content) { return SITE + path + '?' + UTM + '&utm_content=' + content; }
+    // `rg=lp` le dice a la tienda que la visita viene de esta landing: allí no se le
+    // muestra el gate de investigador (decisión del dueño, 2026-11-25; sin texto de
+    // declaración aquí, a pedido suyo). El aviso de uso en investigación es el del pie.
+    function link(path, content) { return SITE + path + '?' + UTM + '&utm_content=' + content + '&rg=lp'; }
     function wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
     /* Medición de clics (2026-11-04). Un evento por botón, con nombres distintos en
        Meta y en GA4 para que el puente GA4→píxel no los cuente dos veces con el mismo nombre.
